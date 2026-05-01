@@ -1,0 +1,14 @@
+
+# Data (quá lớn, không commit)
+data/
+*.csv
+
+# Model lớn
+*.pkl
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+__pycache__/
+
+# Colab temp
+*.pyc

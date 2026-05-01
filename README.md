@@ -71,9 +71,9 @@ joblib
 ```bash
 .
 ├── outputs/          # Biểu đồ EDA, confusion matrix
-├── models/           # random_forest_ids.pkl
+├── models/           # random_forest_ids.pkl, label_endcoder.pkl, scaler.pkl
 ├── logs/             # alerts.log (optional)
-├── notebook.ipynb    # Source code chính
+├── Network_IDS_ML.ipynb    # Source code chính
 └── requirements.txt
 ```
 
@@ -87,13 +87,37 @@ Model tốt nhất (**Random Forest**) được lưu tại:
 models/random_forest_ids.pkl
 ```
 
-### 🔧 Cách sử dụng
+## 🔧 Cách sử dụng
 
 ```python
 import joblib
+import pandas as pd
 
-model = joblib.load("models/random_forest_ids.pkl")
-y_pred = model.predict(X_test)
+# 1. Load model + scaler + label encoder
+model   = joblib.load("models/random_forest_ids.pkl")
+scaler  = joblib.load("models/scaler.pkl")
+le      = joblib.load("models/label_encoder.pkl")
+
+# 2. Các đặc trưng cần thiết (18 features)
+selected_features = [
+    'Destination Port', 'Flow Duration',
+    'Total Fwd Packets', 'Total Backward Packets',
+    'Total Length of Fwd Packets', 'Total Length of Bwd Packets',
+    'Fwd Packet Length Mean', 'Bwd Packet Length Mean',
+    'Flow Bytes/s', 'Flow Packets/s',
+    'Packet Length Mean', 'Packet Length Std',
+    'SYN Flag Count', 'ACK Flag Count', 'FIN Flag Count',
+    'RST Flag Count', 'PSH Flag Count', 'URG Flag Count'
+]
+
+# 3. Chuẩn bị dữ liệu
+X = df[selected_features]
+X_scaled = scaler.transform(X)
+
+# 4. Dự đoán
+y_pred_encoded = model.predict(X_scaled)
+y_pred_label   = le.inverse_transform(y_pred_encoded)
+print(y_pred_label)  # ['BENIGN', 'DDoS', ...]
 ```
 
 > ⚠️ Lưu ý: Dữ liệu đầu vào cần được preprocessing giống như lúc training.
@@ -112,9 +136,7 @@ y_pred = model.predict(X_test)
 
 ## 👨‍💻 Author
 
-* Nguyễn Lê Hoàng Học
+* Nguyễn Lê Hoàng Học - N23DCCN158
 
 ---
 
-👉 review luôn repo GitHub của bạn
-👉 hoặc giúp bạn chỉnh README “level portfolio” (đẹp như project đi xin việc 😄)

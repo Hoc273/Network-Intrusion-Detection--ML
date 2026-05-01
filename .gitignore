@@ -3,8 +3,7 @@
 data/
 *.csv
 
-# Model lớn
-*.pkl
+
 
 # Jupyter checkpoints
 .ipynb_checkpoints/

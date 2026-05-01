@@ -3,8 +3,6 @@
 data/
 *.csv
 
-
-
 # Jupyter checkpoints
 .ipynb_checkpoints/
 __pycache__/
